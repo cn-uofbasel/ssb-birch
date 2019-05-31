@@ -1,0 +1,5 @@
+digraph structs {
+  node [shape = record, fontname = "courier"];
+  rankdir = LR;
+  about [label = "{signed\llog entry | { {entry* | { {backLink*\  | {seqNo\l |  one or more internal hash ref\l } } | { lipmaaLink\ \l | { seqNo\l | one or more internal hash ref\l } } | {contents\ \ \ | sequence of data blocks\ \ \ \ \ \ \nand pointer tables\ \ \ \ \ \ \ \ \ \  } | { tips\ \ \ \ \ \  | sequence of\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \nexternal hash refs\ \ \ \ \ \ \ \ \ \ \ } | signatureInfo*\l } } | signature*\l }}"];
+} 
