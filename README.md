@@ -11,6 +11,7 @@ format and Arj03's [slightly modified version](https://github.com/arj03/ssb-new-
 
 ![record structure of the Birch paket format](figs/birch_log_entry.png)
 
+```*``` denotes a mandatory field.
 
 ## Using ProtoBuf to describe the wire format
 
