@@ -1,0 +1,109 @@
+// ssb-birch.proto
+// v 2019-06-01
+
+syntax = "proto3";
+
+message Log { // this data structure is just for clarity: you shouldn't use
+              // it to store a SSB log, because you wouldn't have random
+              // access to single log entries: consider HDF5 or any other
+              // DB format for storing the log entries
+  FeedID                             feedID = 1;
+  repeated LogEntry                     log = 2;
+}
+
+message FeedID {
+  FeedType             feedType  = 1; // see enum for FT_* below
+  bytes                feedValue = 2; // '@...'
+}
+
+message LogEntry {
+  LogEvent                      event       = 1;
+  bytes                         sigValue    = 2;
+  repeated bytes                attachments = 3;
+}
+
+message LogEvent {
+  // by design, we have no author (feedID) - it's part of the log object
+  // by design, we have no sequence number - it's implicit in the hash chain
+  // by design, we have no timestamp - only causality counts
+  repeated HashRef              backLink    = 1; // mandatory
+  SignatureInfo                 sigInfo     = 2; // mandatory
+  EventStatus                   status      = 3; // optional: start, end of log
+  uint64                        lipmaaLink  = 4; // optional
+  repeated LogContent           contents    = 5; // optional
+  repeated ExternalLogRef       tips        = 6; // optional, for tangling
+  repeated AttachEntry          attachDir   = 7; // optional
+}
+
+message SignatureInfo {
+  SignatureType                  sigType    = 1; // see enum for SI_* below
+  bytes                          keyLocator = 2; // signature-specific
+  // some signatures require a keylocator value:
+  // for SHA256_WITH_RSA    see [RFC3279]
+  // for SHA256_WITH_ECDSA  see [RFC5480]
+}
+
+message ExternalLogRef { // "full name": points to event in arbitrary log
+  FeedID               feedID    = 1;
+  uint64               seqNo     = 2;
+  repeated HashRef     hashRefs  = 3;
+}
+
+message HashRef { // same role as Protocol Lab's "multiformat"
+  HashType             hashType  = 1; // see enum for HT_* below
+  bytes                hashValue = 2;
+}
+
+message AttachEntry { // dir entry, characterizes an in-log data blob
+  uint64                    size = 1;
+  repeated HashRef      hashRefs = 2;
+}
+
+message LogContent {
+  oneof ContTypes {
+    bytes                   data = 1; // in-event data, cannot be deleted
+    inChainPtr              dptr = 2; // off-chain data in an attachment
+    inChainPtr              iptr = 3; // points to an index table with ptrs;
+                                      // this table must be in an attchmt
+                                      // (somewhere in this log)
+  }
+}
+
+message inChainPtr {
+  uint64                    size = 1; // size (cummulative in case of ndx table)
+  uint64                   seqNo = 2; // log entry position, default is this event
+  uint32                attachNo = 3; // relative to above log entry
+}
+
+// enumerations:
+
+enum EventStatus {
+  ES_INBETWEEN                   = 0; // default
+  ES_LOGSTART                    = 1; // log opening event
+  ES_ENDOFLOG                    = 2; // log closing event
+}
+
+enum SignatureType {
+  ST_SHA256_WITH_ED25519         = 0;  // SSB default
+  ST_SHA256_WITH_RSA             = 1;
+  ST_SHA256_WITH_ECDSA           = 2;  // [RFC5753] Section 2.1
+  ST_HMAC_WITH_SHA256            = 3;  // [RFC2104] Section 2
+  ST_SHA521_WITH_ED25519         = 4;  // DAT signature
+}
+
+enum HashType {
+  HT_SHA256                      = 0;  // SSB default
+  HT_SHA384                      = 1;
+  HT_SHA512                      = 2;
+  HT_SHA512224                   = 3;
+  HT_SHA512256                   = 4;
+  HT_BLAKE2B                     = 5;
+}
+
+enum FeedType {
+  FT_SSB_ED25519                 = 0; // SSB (default)
+  FT_DAT_ED25519                 = 1; // DAT
+}
+ 
+
+// eof

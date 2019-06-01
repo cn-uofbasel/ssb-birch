@@ -1,5 +1,5 @@
 digraph structs {
   node [shape = record, fontname = "courier"];
   rankdir = LR;
-  about [label = "{signed\llog entry | { {entry* | { {backLink*\  | {seqNo\l |  one or more internal hash ref\l } } | { lipmaaLink\ \l | { seqNo\l | one or more internal hash ref\l } } | {contents\ \ \ | sequence of data blocks\ \ \ \ \ \ \nand pointer tables\ \ \ \ \ \ \ \ \ \  } | { tips\ \ \ \ \ \  | sequence of\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \nexternal hash refs\ \ \ \ \ \ \ \ \ \ \ } | signatureInfo*\l } } | signature*\l }}"];
+  about [label = "... prev log entry ... | {*signed\lSSB log\levent\l | { {*event | { {*backLink\ \ \ | one or more hashref\ \ \ \ \ } | *signatureInfo\l | status (default, logStart, endOfLog)\l | lipmaaLink (seqNo)\l | {contents\ \ \ \ | sequence of data blocks\ \nand/or pointer tables\ \  } | { tips\ \ \ \ \ \ \ \ | sequence of\ \ \ \ \ \ \ \ \ \ \ \ \ \nexternal references\ \ \ \ \ } | { attachDir\ \ \ | sequence of len/hashref\ } } } | *signature\l }} | optional sequence of attachments (in-log, off-chain)\l | ... next log entry... "];
 } 
