@@ -52,7 +52,7 @@ record captures the event fields of a SSB log entry, to which an outer
 signature has to be added. Beside the mandatory fields there are also
 a few optional fields, for example the before-mentioned
 ```attachDir```. The full ```Birch``` ProtoBuf definition can be found
-[here](ssb_birch.proto):
+[here](ssb-birch.proto):
 
 ```text
 message LogEvent { // Birch proposal for replacing SSB's current JSON dict
