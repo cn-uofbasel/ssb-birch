@@ -3,17 +3,17 @@
 
 syntax = "proto3";
 
-message Log { // this data structure is just for clarity: you shouldn't use
-              // it to store a SSB log, because you wouldn't have random
-              // access to single log entries: consider HDF5 or any other
-              // DB format for storing the log entries
-  FeedID                             feedID = 1;
-  repeated LogEntry                     log = 2;
-}
+// Note: the core of this spec is the LogEntry and LogEvent data structures;
+// all other definitions are decoration and details.
 
-message FeedID {
-  FeedType             feedType  = 1; // see enum for FT_* below
-  bytes                feedValue = 2; // '@...'
+message Log { // this Log data structure is just for clarity, showing how
+              // to represent a logical log replica: you shouldn't use
+              // this protobuf data struct to store it in this way because
+              // you wouldn't have random access to single log entries
+              // due to their variable size: consider HDF5 or any other
+              // DB format for storing the array of log entries.
+  FeedID                             feedID = 1;
+  repeated LogEntry                     log = 2; // array of log entries
 }
 
 message LogEntry {
@@ -41,6 +41,11 @@ message SignatureInfo {
   // some signatures require a keylocator value:
   // for SHA256_WITH_RSA    see [RFC3279]
   // for SHA256_WITH_ECDSA  see [RFC5480]
+}
+
+message FeedID {
+  FeedType             feedType  = 1; // see enum for FT_* below
+  bytes                feedValue = 2; // '@...'
 }
 
 message ExternalLogRef { // "full name": points to event in arbitrary log

@@ -44,7 +44,7 @@ signature. The purpose of these in-log, off-chain blobs is that they
 can be removed from storage without modifying the event hash
 chain. The reference for such in-log blobs is a triple
 ```<authorID,seqNo,attchNo>```, where a ```attachNo``` value of 0
-means the bytes of the event record itself.
+means the bytes of the signed event record itself.
 
 The following
 [ProtoBuf](https://developers.google.com/protocol-buffers/docs/proto3)
@@ -67,6 +67,7 @@ message LogEvent { // Birch proposal for replacing SSB's current JSON dict
   repeated ExternalLogRef       tips        = 6; // optional, for tangling
   repeated AttachEntry          attachDir   = 7; // optional
 }
++ signature
 ```
 
 The complete ```Birch``` transfer data structure is shown in the
@@ -94,6 +95,8 @@ the omitted sequence number and author's id.
 ---
 
 ## Comments on the ```Birch``` Transfer Data Structure
+
+See [ssb-birch.proto](ssb-birch.proto) for the ```Birch``` ProtoBuf spec:
 
 - using ProtoBuf forces us to be explicit when we say "hashref", for
   example.
@@ -123,7 +126,7 @@ the omitted sequence number and author's id.
 
 - optional ```EventStatus```: flags the start or end of a log
 
-- optional Lipmaa link: internal reference (as above), see the
+- optional Lipmaa link: log-internal reference (seqNo), see the
   [```Bamboo```](https://github.com/aljoschameyer/bamboo) proposal for
   more details
 
